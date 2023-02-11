@@ -106,6 +106,13 @@ const VoiceRSS = {
   },
 };
 
+// Disable/Enable Button
+function toggleButton() {
+  // Ako je button.disabled sa leve strane true onda ce biti jednako false
+  // Ako je button.disabled sa leve strane false onda ce biti jednako true
+  button.disabled = !button.disabled;
+}
+
 // Passing Joke to VoiceRSS API
 function tellMe(joke) {
   // console.log("tell me", joke);
@@ -137,6 +144,9 @@ async function getJokes() {
     } else {
       joke = data.joke;
     }
+    // Text-to-Speech
+    // Disable Button
+    toggleButton();
     tellMe(joke);
   } catch (error) {
     // Catch Errors Here
@@ -144,4 +154,12 @@ async function getJokes() {
   }
 }
 
-getJokes();
+// Event Listeners
+button.addEventListener("click", getJokes);
+// Ovde pozivamo toggleButton funkciju jedanput tj prvi put kada dodje audio do kraja
+// i onda ce button ostati disabled
+// Ali mi zelimo da bude disabled dok se sala izgovara ali da ponovo bude enabled
+// kada se sala zavrsi
+// Zato moramo da ponovo pozovemo funkciju kada se klikne na dugme a to se desava unutar
+// funkcije getJokes
+audioElement.addEventListener("ended", toggleButton);
